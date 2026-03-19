@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power IC 自動化設計驗證流程 - 16:9 橫向版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --secondary: #64748b;
+            --analog: #f59e0b;
+            --digital: #3b82f6;
+            --bg: #f8fafc;
+        }
+        body {
+            background-color: var(--bg);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        /* 鎖定 16:9 比例容器 */
+        .canvas-16-9 {
+            width: 1280px;
+            height: 720px;
+            background: white;
+            padding: 3rem;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+        }
+        .step-node {
+            flex: 1;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .step-node:hover {
+            transform: translateY(-8px);
+        }
+        /* 橫向連接線 */
+        .connector-line {
+            position: absolute;
+            top: 28px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: 0;
+        }
+        .step-node:last-child .connector-line {
+            display: none;
+        }
+        .badge {
+            font-size: 0.65rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 4px;
+        }
+        .badge-analog { background: #fff7ed; color: #9a3412; border: 1px solid #ffedd5; }
+        .badge-digital { background: #eff6ff; color: #1e40af; border: 1px solid #dbeafe; }
+        .badge-mixed { background: #f5f3ff; color: #5b21b6; border: 1px solid #ede9fe; }
+    </style>
+</head>
+<body>
+    <div class="canvas-16-9">
+        <!-- Header -->
+        <header class="mb-12 flex justify-between items-end border-b border-slate-100 pb-6">
+            <div>
+                <h1 class="text-4xl font-black text-slate-900 tracking-tight">Power IC Mixed-Signal DV Flow</h1>
+                <p class="text-slate-500 mt-2 text-lg font-medium">高效能數模混合自動化驗證週期 (RNM Based)</p>
+            </div>
+            <div class="flex gap-6 mb-1">
+                <span class="flex items-center text-xs font-bold text-amber-600 uppercase tracking-widest"><span class="w-2.5 h-2.5 bg-amber-500 rounded-full mr-2"></span> Analog</span>
+                <span class="flex items-center text-xs font-bold text-blue-600 uppercase tracking-widest"><span class="w-2.5 h-2.5 bg-blue-500 rounded-full mr-2"></span> Digital</span>
+                <span class="flex items-center text-xs font-bold text-purple-600 uppercase tracking-widest"><span class="w-2.5 h-2.5 bg-purple-500 rounded-full mr-2"></span> Mixed</span>
+            </div>
+        </header>
+
+        <!-- Main Horizontal Flow -->
+        <div class="flex justify-between items-start gap-4 flex-1 relative z-10">
+            <!-- Step 1 -->
+            <div class="step-node text-center">
+                <div class="connector-line"></div>
+                <div class="w-14 h-14 bg-amber-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl mx-auto mb-6 shadow-lg shadow-amber-100 relative z-10">01</div>
+                <h3 class="font-bold text-slate-800 text-sm mb-2">驗證規劃 (Planning)</h3>
+                <p class="text-[11px] text-slate-500 px-2 leading-relaxed">定義 Control Loop 與 Register Map 交互介面。</p>
+                <div class="mt-3">
+                    <span class="badge badge-analog">Loop Spec</span>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-node text-center">
+                <div class="connector-line"></div>
+                <div class="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center font-black text-2xl mx-auto mb-6 shadow-lg shadow-blue-100 relative z-10">02</div>
+                <h3 class="font-bold text-slate-800 text-sm mb-2">RNM 建模 (Modeling)</h3>
+                <p class="text-[11px] text-slate-500 px-2 leading-relaxed">利用實數模型加速類比仿真 100x。</p>
+                <div class="mt-3">
+                    <span class="badge badge-digital">SV-RNM</span>
+                    <span class="badge badge-digital">Wreal</span>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-node text-center">
+                <div class="connector-line"></div>
+                <div class="w-14 h-14 bg-indigo-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl mx-auto mb-6 shadow-lg shadow-indigo-100 relative z-10">03</div>
+                <h3 class="font-bold text-slate-800 text-sm mb-2">協同仿真 (Co-Sim)</h3>
+                <p class="text-[11px] text-slate-500 px-2 leading-relaxed">UVM 隨機激勵與動態閉環驗證。</p>
+                <div class="mt-3">
+                    <span class="badge badge-mixed">UVM-AMS</span>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-node text-center">
+                <div class="connector-line"></div>
+                <div class="w-14 h-14 bg-emerald-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl mx-auto mb-6 shadow-lg shadow-emerald-100 relative z-10">04</div>
+                <h3 class="font-bold text-slate-800 text-sm mb-2">低功耗 (LPV)</h3>
+                <p class="text-[11px] text-slate-500 px-2 leading-relaxed">驗證多電壓域切換與漏電路徑。</p>
+                <div class="mt-3">
+                    <span class="badge badge-digital">UPF 3.0</span>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step-node text-center">
+                <div class="connector-line"></div>
+                <div class="w-14 h-14 bg-rose-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl mx-auto mb-6 shadow-lg shadow-rose-100 relative z-10">05</div>
+                <h3 class="font-bold text-slate-800 text-sm mb-2">簽收 (Sign-off)</h3>
+                <p class="text-[11px] text-slate-500 px-2 leading-relaxed">PVT 全角點掃描與後模擬驗證。</p>
+                <div class="mt-3">
+                    <span class="badge badge-analog">PEX / PVT</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Highlight (Bottom Section) -->
+        <div class="mt-12 bg-slate-900 rounded-2xl p-8 text-white flex items-center justify-between shadow-2xl">
+            <div class="flex-1 border-r border-slate-700 pr-8">
+                <h4 class="text-amber-400 font-bold text-sm mb-2 uppercase tracking-widest">RNM Value Proposition</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">將類比連續信號數位化為實數，使 UVM Scoreboard 具備自動化判定類比特性的能力，解決傳統 SPICE 模擬速度瓶頸。</p>
+            </div>
+            <div class="flex-1 px-8 border-r border-slate-700">
+                <h4 class="text-blue-400 font-bold text-sm mb-2 uppercase tracking-widest">Mixed-Signal UVM</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">支援隨機動態負載 (Random Load) 與環境參數自動化測試，大幅提升 Power IC 保護電路之覆蓋率。</p>
+            </div>
+            <div class="flex-1 pl-8">
+                <h4 class="text-emerald-400 font-bold text-sm mb-2 uppercase tracking-widest">Reliability Check</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">結合 UPF 靜態檢查與多角點自動化回歸，確保 PMIC 在極端環境下之啟動時序與斷電安全。</p>
+            </div>
+        </div>
+
+        <!-- Watermark/Info -->
+        <div class="absolute bottom-4 right-8 text-[10px] text-slate-300 font-bold italic">
+            CONFIDENTIAL / INTERNAL USE ONLY
+        </div>
+    </div>
+</body>
+</html>
